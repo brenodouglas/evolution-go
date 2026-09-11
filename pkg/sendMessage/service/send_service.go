@@ -44,6 +44,7 @@ type SendService interface {
 	SendContact(data *ContactStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendButton(data *ButtonStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendList(data *ListStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
+	SendCarousel(data *CarouselStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 }
 
 type Node struct {
@@ -180,6 +181,7 @@ type ButtonStruct struct {
 	Number       string       `json:"number"`
 	Title        string       `json:"title"`
 	Description  string       `json:"description"`
+	ImageURL     string       `json:"imageUrl"`
 	Footer       string       `json:"footer"`
 	Buttons      []Button     `json:"buttons"`
 	Delay        int32        `json:"delay"`
@@ -212,6 +214,24 @@ type ListStruct struct {
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
+}
+
+type CarouselStruct struct {
+	Delay        int32        `json:"delay"`
+	MentionedJID string       `json:"mentionedJid"`
+	MentionAll   bool         `json:"mentionAll"`
+	FormatJid    *bool        `json:"formatJid,omitempty"`
+	Quoted       QuotedStruct `json:"quoted"`
+	Number       string       `json:"number"`
+	Title        string       `json:"title"`
+	Description  string       `json:"description"`
+	FooterText   string       `json:"footerText"`
+	Cards        []struct {
+		Text         string   `json:"text"`
+		ThumbnailUrl string   `json:"thumbnailUrl"`
+		FooterText   string   `json:"footerText"`
+		Buttons      []Button `json:"buttons"`
+	} `json:"cards"`
 }
 
 type MessageSendStruct struct {
@@ -1548,6 +1568,63 @@ func (s *sendService) SendButton(data *ButtonStruct, instance *instance_model.In
 		}
 	}
 
+	if data.ImageURL != "" {
+		var url string = data.ImageURL
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Iniciando download da URL: %s", instance.Id, url)
+
+		resp, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Download concluído em %v. Lendo dados...", instance.Id)
+
+		downloadStart := time.Now()
+		fileData, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Leitura dos dados concluída em %v. Tamanho: %d bytes", instance.Id, time.Since(downloadStart), len(fileData))
+
+		mime, _ := mimetype.DetectReader(bytes.NewReader(fileData))
+		mimeType := mime.String()
+
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Tipo MIME detectado: %s", instance.Id, mimeType)
+
+		var uploadType whatsmeow.MediaType
+
+		if strings.HasSuffix(strings.ToLower(url), ".png") || strings.HasSuffix(strings.ToLower(url), ".jpg") || strings.HasSuffix(strings.ToLower(url), ".jpeg") || strings.HasSuffix(strings.ToLower(url), ".webp") {
+			uploadType = whatsmeow.MediaImage
+		}
+
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Iniciando upload para WhatsApp...", instance.Id)
+		uploadStart := time.Now()
+		uploaded, err := client.Upload(context.Background(), fileData, uploadType)
+		if err != nil {
+			return nil, err
+		}
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Upload concluído em %v. Tamanho: %d", instance.Id, time.Since(uploadStart), uploaded.FileLength)
+
+		var media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
+			URL:           proto.String(uploaded.URL),
+			DirectPath:    proto.String(uploaded.DirectPath),
+			MediaKey:      uploaded.MediaKey,
+			Mimetype:      proto.String(mimeType),
+			FileEncSHA256: uploaded.FileEncSHA256,
+			FileSHA256:    uploaded.FileSHA256,
+			FileLength:    proto.Uint64(uint64(len(fileData))),
+			JPEGThumbnail: fileData,
+		}}
+
+		msg.InteractiveMessage.Header = &waE2E.InteractiveMessage_Header{
+			HasMediaAttachment: proto.Bool(true),
+			Media: &waE2E.InteractiveMessage_Header_ImageMessage{
+				ImageMessage: media.GetImageMessage(),
+			},
+		}
+	}
+
 	recipient, err := s.validateAndCheckUserExists(data.Number, data.FormatJid, &data.Quoted.MessageID, &data.Quoted.MessageID, instance)
 	if err != nil {
 		s.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields or user check: %v", instance.Id, err)
@@ -1601,6 +1678,278 @@ func (s *sendService) SendButton(data *ButtonStruct, instance *instance_model.In
 	}
 
 	return messageSent, nil
+}
+
+func loadImage(s *sendService, data *ButtonStruct, instance *instance_model.Instance, client *whatsmeow.Client) (*waE2E.Message, error) {
+	if data.ImageURL != "" {
+		var url string = data.ImageURL
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Iniciando download da URL: %s", instance.Id, url)
+
+		resp, err := http.Get(url)
+		if err != nil {
+			return nil, err
+		}
+		defer resp.Body.Close()
+
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Download concluído em %v. Lendo dados...", instance.Id)
+
+		downloadStart := time.Now()
+		fileData, err := io.ReadAll(resp.Body)
+		if err != nil {
+			return nil, err
+		}
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Leitura dos dados concluída em %v. Tamanho: %d bytes", instance.Id, time.Since(downloadStart), len(fileData))
+
+		mime, _ := mimetype.DetectReader(bytes.NewReader(fileData))
+		mimeType := mime.String()
+
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Tipo MIME detectado: %s", instance.Id, mimeType)
+
+		var uploadType whatsmeow.MediaType
+
+		if strings.HasSuffix(strings.ToLower(url), ".png") || strings.HasSuffix(strings.ToLower(url), ".jpg") || strings.HasSuffix(strings.ToLower(url), ".jpeg") || strings.HasSuffix(strings.ToLower(url), ".webp") {
+			uploadType = whatsmeow.MediaImage
+		}
+
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Iniciando upload para WhatsApp...", instance.Id)
+		uploadStart := time.Now()
+		uploaded, err := client.Upload(context.Background(), fileData, uploadType)
+		if err != nil {
+			return nil, err
+		}
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Upload concluído em %v. Tamanho: %d", instance.Id, time.Since(uploadStart), uploaded.FileLength)
+
+		var media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
+			URL:           proto.String(uploaded.URL),
+			DirectPath:    proto.String(uploaded.DirectPath),
+			MediaKey:      uploaded.MediaKey,
+			Mimetype:      proto.String(mimeType),
+			FileEncSHA256: uploaded.FileEncSHA256,
+			FileSHA256:    uploaded.FileSHA256,
+			FileLength:    proto.Uint64(uint64(len(fileData))),
+			JPEGThumbnail: fileData,
+		}}
+
+		return media, err
+
+	}
+
+	return nil, nil
+}
+
+func (s *sendService) SendCarousel(data *CarouselStruct, instance *instance_model.Instance) (*MessageSendStruct, error) {
+	return s.sendCarouselWithRetry(data, instance, 3)
+}
+
+func (s *sendService) sendCarouselWithRetry(data *CarouselStruct, instance *instance_model.Instance, maxRetries int) (*MessageSendStruct, error) {
+	for attempt := 1; attempt <= maxRetries; attempt++ {
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] SendCarousel attempt %d/%d", instance.Id, attempt, maxRetries)
+
+		client, err := s.ensureClientConnectedWithRetry(instance.Id, 2)
+		if err != nil {
+			if attempt == maxRetries {
+				return nil, err
+			}
+			continue
+		}
+
+		// Build carousel cards
+		cards := []*waE2E.InteractiveMessage{}
+
+		for _, c := range data.Cards {
+			newCard := &waE2E.InteractiveMessage{}
+
+			// Set body text if present
+			if c.Text != "" {
+				newCard.Body = &waE2E.InteractiveMessage_Body{
+					Text: &c.Text,
+				}
+			}
+
+			// Set footer text if present
+			if c.FooterText != "" {
+				newCard.Footer = &waE2E.InteractiveMessage_Footer{
+					Text: &c.FooterText,
+				}
+			}
+
+			// Load and set thumbnail image if URL is provided
+			if c.ThumbnailUrl != "" {
+				media, err := loadImage(s, &ButtonStruct{ImageURL: c.ThumbnailUrl}, instance, client)
+				if err != nil {
+					s.loggerWrapper.GetLogger(instance.Id).LogWarn("[%s] Failed to load thumbnail for carousel card: %v", instance.Id, err)
+				} else if media != nil {
+					newCard.Header = &waE2E.InteractiveMessage_Header{
+						HasMediaAttachment: proto.Bool(true),
+						Media: &waE2E.InteractiveMessage_Header_ImageMessage{
+							ImageMessage: media.GetImageMessage(),
+						},
+					}
+				}
+			}
+
+			// Build buttons for the card
+			buttons := []*waE2E.InteractiveMessage_NativeFlowMessage_NativeFlowButton{}
+			for _, v := range c.Buttons {
+				var paramsJSON *string
+				var name *string
+
+				switch v.Type {
+				case "reply":
+					name = proto.String("quick_reply")
+					paramsJSON = proto.String(`{"display_text":"` + v.DisplayText + `","id":"` + v.Id + `"}`)
+				case "copy":
+					name = proto.String("cta_copy")
+					paramsJSON = proto.String(`{"display_text":"` + v.DisplayText + `","copy_code":"` + v.CopyCode + `"}`)
+				case "url":
+					name = proto.String("cta_url")
+					paramsJSON = proto.String(`{"display_text":"` + v.DisplayText + `","url":"` + v.URL + `","merchant_url":"` + v.URL + `"}`)
+				case "call":
+					name = proto.String("cta_call")
+					paramsJSON = proto.String(`{"display_text":"` + v.DisplayText + `","phone_number":"` + v.PhoneNumber + `"}`)
+				case "pix":
+					randomId := utils.GenerateRandomString(11)
+					name = proto.String("payment_info")
+					paramsJSON = proto.String(`{"currency":"` + v.Currency + `","total_amount":{"value":0,"offset":100},"reference_id":"` + randomId + `","type":"physical-goods","order":{"status":"pending","subtotal":{"value":0,"offset":100},"order_type":"ORDER","items":[{"name":"","amount":{"value":0,"offset":100},"quantity":0,"sale_amount":{"value":0,"offset":100}}]},"payment_settings":[{"type":"pix_static_code","pix_static_code":{"merchant_name":"` + v.Name + `","key":"` + v.Key + `","key_type":"` + mapKeyType(v.KeyType) + `"}}],"share_payment_status":false}`)
+				}
+
+				buttons = append(buttons, &waE2E.InteractiveMessage_NativeFlowMessage_NativeFlowButton{
+					Name:             name,
+					ButtonParamsJSON: paramsJSON,
+				})
+			}
+
+			newCard.InteractiveMessage = &waE2E.InteractiveMessage_NativeFlowMessage_{
+				NativeFlowMessage: &waE2E.InteractiveMessage_NativeFlowMessage{
+					Buttons: buttons,
+				},
+			}
+
+			cards = append(cards, newCard)
+		}
+
+		messageId := client.GenerateMessageID()
+
+		// Build the carousel message body
+		body := data.Title
+		if data.Description != "" {
+			body += "\n\n" + data.Description
+		}
+
+		msg := &waE2E.Message{
+			InteractiveMessage: &waE2E.InteractiveMessage{
+				Body: &waE2E.InteractiveMessage_Body{
+					Text: &body,
+				},
+				Footer: &waE2E.InteractiveMessage_Footer{
+					Text: &data.FooterText,
+				},
+				InteractiveMessage: &waE2E.InteractiveMessage_CarouselMessage_{
+					CarouselMessage: &waE2E.InteractiveMessage_CarouselMessage{
+						Cards: cards,
+					},
+				},
+			},
+		}
+
+		if data.Title != "" {
+			msg.InteractiveMessage.Header = &waE2E.InteractiveMessage_Header{
+				Title: &data.Title,
+			}
+		}
+
+		recipient, err := s.validateAndCheckUserExists(data.Number, data.FormatJid, &data.Quoted.MessageID, &data.Quoted.Participant, instance)
+		if err != nil {
+			s.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Error validating message fields or user check: %v", instance.Id, err)
+			return nil, err
+		}
+
+		if data.Delay > 0 {
+			err := client.SendChatPresence(context.Background(), recipient, types.ChatPresence("composing"), types.ChatPresenceMedia(""))
+			if err != nil {
+				return nil, err
+			}
+
+			time.Sleep(time.Duration(data.Delay) * time.Millisecond)
+
+			err = client.SendChatPresence(context.Background(), recipient, types.ChatPresence("paused"), types.ChatPresenceMedia(""))
+			if err != nil {
+				return nil, err
+			}
+		}
+
+		nodes := []waBinary.Node{
+			{
+				Tag:   "biz",
+				Attrs: map[string]any{},
+				Content: []waBinary.Node{
+					{
+						Tag: "interactive",
+						Attrs: map[string]any{
+							"type": "native_flow",
+							"v":    "1",
+						},
+						Content: []waBinary.Node{
+							{
+								Tag: "native_flow",
+								Attrs: map[string]any{
+									"v":    "2",
+									"name": "mixed",
+								},
+								Content: nil,
+							},
+						},
+					},
+				},
+			},
+		}
+
+		response, err := client.SendMessage(context.Background(), recipient, msg, whatsmeow.SendRequestExtra{
+			ID:              messageId,
+			AdditionalNodes: &nodes,
+		})
+
+		if err != nil {
+			if strings.Contains(err.Error(), "client disconnected") || strings.Contains(err.Error(), "no active session") {
+				s.loggerWrapper.GetLogger(instance.Id).LogWarn("[%s] SendCarousel failed due to disconnection on attempt %d/%d: %v", instance.Id, attempt, maxRetries, err)
+				if attempt < maxRetries {
+					waitTime := time.Duration(attempt) * time.Second
+					s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Waiting %v before retry", instance.Id, waitTime)
+					time.Sleep(waitTime)
+					continue
+				}
+			}
+			return nil, err
+		}
+
+		messageInfo := types.MessageInfo{
+			MessageSource: types.MessageSource{
+				Chat:     recipient,
+				Sender:   *client.Store.ID,
+				IsFromMe: true,
+				IsGroup:  false,
+			},
+			ID:        messageId,
+			Timestamp: time.Now(),
+			ServerID:  response.ServerID,
+			Type:      "CarouselMessage",
+		}
+
+		messageSent := &MessageSendStruct{
+			Info:    messageInfo,
+			Message: msg,
+			MessageContextInfo: &waE2E.ContextInfo{
+				StanzaID:      proto.String(data.Quoted.MessageID),
+				Participant:   proto.String(data.Quoted.Participant),
+				QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
+			},
+		}
+
+		s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] SendCarousel successful on attempt %d", instance.Id, attempt)
+		return messageSent, nil
+	}
+
+	return nil, fmt.Errorf("failed to send carousel after %d attempts", maxRetries)
 }
 
 func stringPointer(s string) *string {

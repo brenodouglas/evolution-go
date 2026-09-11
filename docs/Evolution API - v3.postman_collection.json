@@ -25,7 +25,7 @@
 						],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"number\": \"{{remoteJid}}\",\n    \"title\": \"Escolha uma opção\",\n    \"description\": \"Selecione o que deseja fazer\",\n    \"footer\": \"Powered by Evolution GO\",\n    \"buttons\": [\n        // {\n        //   \"type\": \"reply\",\n        //   \"displayText\": \"Ver Produtos\",\n        //   \"id\": \"btn_produtos\"\n        // }\n        // {\n        //     \"type\": \"pix\",\n        //     \"name\": \"Loja Exemplo\",\n        //     \"key\": \"exemplo@pix.com\",\n        //     \"keyType\": \"email\",\n        //     \"currency\": \"BRL\"\n        // }\n        // {\n        //     \"type\": \"url\",\n        //     \"displayText\": \"Site Oficial\",\n        //     \"url\": \"https://exemplo.com\"\n        // }\n        // {\n        //   \"type\": \"call\",\n        //   \"displayText\": \"Ligar\",\n        //   \"phoneNumber\": \"5511999999999\"\n        // }\n    ]\n}",
+							"raw": "{\n    \"number\": \"{{remoteJid}}\",\n    \"title\": \"Escolha uma opção\",\n    \"description\": \"Selecione o que deseja fazer\",\n    \"footer\": \"Powered by Evolution GO\",\n    \"imageUrl\": \"https://cdn.ahnegao.com.br/wp-content/uploads/2011/04/dinossauros.jpg\",\n    \"buttons\": [\n        {\n          \"type\": \"reply\",\n          \"displayText\": \"Ver Produtos\",\n          \"id\": \"btn_produtos\"\n        }\n        // {\n        //     \"type\": \"pix\",\n        //     \"name\": \"Loja Exemplo\",\n        //     \"key\": \"exemplo@pix.com\",\n        //     \"keyType\": \"email\",\n        //     \"currency\": \"BRL\"\n        // }\n        // {\n        //     \"type\": \"url\",\n        //     \"displayText\": \"Site Oficial\",\n        //     \"url\": \"https://exemplo.com\"\n        // }\n        // {\n        //   \"type\": \"call\",\n        //   \"displayText\": \"Ligar\",\n        //   \"phoneNumber\": \"5511999999999\"\n        // }\n    ]\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -40,6 +40,43 @@
 							"path": [
 								"send",
 								"button"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://localhost:4000/send/contact \\\n  -H \"Content-Type: application/json\" \\\n  -H \"apikey: SUA-CHAVE-API\" \\\n  -d '{\n    \"number\": \"5511999999999\",\n    \"vcard\": {\n      \"fullName\": \"Maria Santos\",\n      \"phone\": \"5511777777777\",\n      \"organization\": \"Vendas LTDA\"\n    }\n  }'"
+					},
+					"response": []
+				},
+				{
+					"name": "Send Carousel",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "apikey",
+								"value": "{{apiKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"number\": \"{{remoteJid}}\", //5527981120473\n    \"title\": \"Escolha uma opção\",\n    \"description\": \"Selecione o que deseja fazer\",\n    \"footerText\": \"Powered by Evolution GO\",\n    \"cards\": [\n        {\n            \"text\": \"ava\", // Opcional,\n            \"footerText\": \"ex\",\n            \"thumbnailUrl\": \"https://www.victoireimoveis.com.br/blog/wp-content/uploads/Imovel-de-Luxo-Quais-os-Tipos-Valores-e-Onde-Encontrar.jpg\"\n            // Botões também são opcionais\n            // \"buttons\": [\n            //     {\n            //         \"type\": \"url\",\n            //         \"displayText\": \"Evolution API\",\n            //         \"url\": \"http://evolution-api.com\"\n            //     },\n            //     {\n            //         \"type\": \"call\",\n            //         \"displayText\": \"Me ligue\",\n            //         \"phoneNumber\": \"557499879409\"\n            //     }\n            // ]\n        },\n        {\n            \"text\": \"ava\",\n            \"thumbnailUrl\": \"https://media.gazetadopovo.com.br/2024/01/23134950/Comece-definindo-as-necessidades-e-perfil-de-voc%C3%AA-e-sua-fam%C3%ADlia-para-a-escolha-do-im%C3%B3vel-ideal-960x540.jpg\",\n            \"buttons\": [\n                {\n                    \"type\": \"url\",\n                    \"displayText\": \"Evolution API\",\n                    \"url\": \"http://evolution-api.com\"\n                },\n                {\n                    \"type\": \"call\",\n                    \"displayText\": \"Me ligue\",\n                    \"phoneNumber\": \"553171670477\"\n                }\n            ]\n        },\n        {\n            \"thumbnailUrl\": \"https://static.arboimoveis.com.br/CA0038_MCIMOV/wmk/OTQyMTNfTUNJTU9WL2FydGJvYXJkLTE5LWNvcHkxNzMzMzI2NzEzOTc2LnBuZw%3D%3D/B1ED1752-24A0-4AE1-9898-97DECAC2C9E5.jpg\",\n            \"footerText\": \"ex\",\n            \"buttons\": [\n                {\n                    \"type\": \"url\",\n                    \"displayText\": \"Evolution API\",\n                    \"url\": \"http://evolution-api.com\"\n                },\n                {\n                    \"type\": \"call\",\n                    \"displayText\": \"Me ligue\",\n                    \"phoneNumber\": \"553171670477\"\n                },\n                {\n                    \"type\": \"reply\",\n                    \"displayText\": \"Resposta\",\n                    \"id\": \"123\"\n                }\n            ]\n        }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/send/carousel",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"send",
+								"carousel"
 							]
 						},
 						"description": "Generated from cURL: curl -X POST http://localhost:4000/send/contact \\\n  -H \"Content-Type: application/json\" \\\n  -H \"apikey: SUA-CHAVE-API\" \\\n  -d '{\n    \"number\": \"5511999999999\",\n    \"vcard\": {\n      \"fullName\": \"Maria Santos\",\n      \"phone\": \"5511777777777\",\n      \"organization\": \"Vendas LTDA\"\n    }\n  }'"

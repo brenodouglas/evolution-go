@@ -673,8 +673,23 @@ func (s *sendHandler) SendCarousel(ctx *gin.Context) {
 		return
 	}
 
+	if data.Title == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "title is required"})
+		return
+	}
+
+	if data.Description == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "description is required"})
+		return
+	}
+
+	if data.FooterText == "" {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "footer is required"})
+		return
+	}
+
 	if len(data.Cards) == 0 {
-		ctx.JSON(http.StatusBadRequest, gin.H{"error": "at least one card is required"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "cards are required"})
 		return
 	}
 

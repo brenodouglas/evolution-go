@@ -1,0 +1,1255 @@
+{
+    "info": {
+      "_postman_id": "evolution-go-collection",
+      "name": "Evolution GO",
+      "description": "Evolution GO - whatsmeow API Collection",
+      "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    },
+    "variable": [
+      {
+        "key": "baseUrl",
+        "value": "http://localhost:8080",
+        "type": "string"
+      },
+      {
+        "key": "apikey",
+        "value": "",
+        "type": "string"
+      }
+    ],
+    "item": [
+      {
+        "name": "Chat",
+        "item": [
+          {
+            "name": "Archive a chat",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"chat\": \"5511999999999@s.whatsapp.net\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/chat/archive",
+                "host": ["{{baseUrl}}"],
+                "path": ["chat", "archive"]
+              },
+              "description": "Archive a chat"
+            }
+          },
+          {
+            "name": "Mute a chat",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"chat\": \"5511999999999@s.whatsapp.net\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/chat/mute",
+                "host": ["{{baseUrl}}"],
+                "path": ["chat", "mute"]
+              },
+              "description": "Mute a chat"
+            }
+          },
+          {
+            "name": "Pin a chat",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"chat\": \"5511999999999@s.whatsapp.net\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/chat/pin",
+                "host": ["{{baseUrl}}"],
+                "path": ["chat", "pin"]
+              },
+              "description": "Pin a chat"
+            }
+          },
+          {
+            "name": "Unpin a chat",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"chat\": \"5511999999999@s.whatsapp.net\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/chat/unpin",
+                "host": ["{{baseUrl}}"],
+                "path": ["chat", "unpin"]
+              },
+              "description": "Unpin a chat"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Community",
+        "item": [
+          {
+            "name": "Add participant to community",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"communityJid\": \"123456789@g.us\",\n  \"groupJid\": [\"987654321@g.us\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/community/add",
+                "host": ["{{baseUrl}}"],
+                "path": ["community", "add"]
+              },
+              "description": "Add participant to community"
+            }
+          },
+          {
+            "name": "Create community",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"communityName\": \"My Community\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/community/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["community", "create"]
+              },
+              "description": "Create community"
+            }
+          },
+          {
+            "name": "Remove participant from community",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"communityJid\": \"123456789@g.us\",\n  \"groupJid\": [\"987654321@g.us\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/community/remove",
+                "host": ["{{baseUrl}}"],
+                "path": ["community", "remove"]
+              },
+              "description": "Remove participant from community"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Group",
+        "item": [
+          {
+            "name": "Create group",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"groupName\": \"My Group\",\n  \"participants\": [\"5511999999999\", \"5511888888888\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/group/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "create"]
+              },
+              "description": "Create group"
+            }
+          },
+          {
+            "name": "Get group info",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"groupJid\": \"123456789@g.us\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/group/info",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "info"]
+              },
+              "description": "Get group info"
+            }
+          },
+          {
+            "name": "Get group invite link",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"groupJid\": \"123456789@g.us\",\n  \"reset\": false\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/group/invitelink",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "invitelink"]
+              },
+              "description": "Get group invite link"
+            }
+          },
+          {
+            "name": "Join group link",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"code\": \"AbCdEfGhIjKl\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/group/join",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "join"]
+              },
+              "description": "Join group link"
+            }
+          },
+          {
+            "name": "List groups",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/group/list",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "list"]
+              },
+              "description": "List groups"
+            }
+          },
+          {
+            "name": "Get my groups",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/group/myall",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "myall"]
+              },
+              "description": "Get my groups"
+            }
+          },
+          {
+            "name": "Set group name",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"groupJid\": \"123456789@g.us\",\n  \"name\": \"New Group Name\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/group/name",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "name"]
+              },
+              "description": "Set group name"
+            }
+          },
+          {
+            "name": "Update participant",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"action\": \"add\",\n  \"groupJid\": {\n    \"user\": \"123456789\",\n    \"server\": \"g.us\",\n    \"device\": 0,\n    \"integrator\": 0,\n    \"rawAgent\": 0\n  },\n  \"participants\": [\"5511999999999\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/group/participant",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "participant"]
+              },
+              "description": "Update participant (action: add | remove | promote | demote)"
+            }
+          },
+          {
+            "name": "Set group photo",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"groupJid\": \"123456789@g.us\",\n  \"image\": \"base64_or_url_here\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/group/photo",
+                "host": ["{{baseUrl}}"],
+                "path": ["group", "photo"]
+              },
+              "description": "Set group photo"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Instance",
+        "item": [
+          {
+            "name": "Get all instances",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/instance/all",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "all"]
+              },
+              "description": "Get all instances"
+            }
+          },
+          {
+            "name": "Connect to instance",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"phone\": \"5511999999999\",\n  \"webhookUrl\": \"https://your-webhook.com/webhook\",\n  \"subscribe\": [\"messages\", \"status\"],\n  \"immediate\": false\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/instance/connect",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "connect"]
+              },
+              "description": "Connect to instance with the provided data"
+            }
+          },
+          {
+            "name": "Create a new instance",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"my-instance\",\n  \"token\": \"my-secret-token\",\n  \"proxy\": {\n    \"address\": \"\",\n    \"port\": \"\",\n    \"username\": \"\",\n    \"password\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/instance/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "create"]
+              },
+              "description": "Creates a new instance with the provided data"
+            }
+          },
+          {
+            "name": "Delete instance",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/instance/delete/:instanceId",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "delete", ":instanceId"],
+                "variable": [
+                  { "key": "instanceId", "value": "my-instance" }
+                ]
+              },
+              "description": "Delete instance"
+            }
+          },
+          {
+            "name": "Disconnect from instance",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/instance/disconnect",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "disconnect"]
+              },
+              "description": "Disconnect from instance"
+            }
+          },
+          {
+            "name": "Logout from instance",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/instance/logout",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "logout"]
+              },
+              "description": "Logout from instance"
+            }
+          },
+          {
+            "name": "Request pairing code",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"phone\": \"5511999999999\",\n  \"subscribe\": [\"messages\", \"status\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/instance/pair",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "pair"]
+              },
+              "description": "Request pairing code"
+            }
+          },
+          {
+            "name": "Delete proxy",
+            "request": {
+              "method": "DELETE",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/instance/proxy/:instanceId",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "proxy", ":instanceId"],
+                "variable": [
+                  { "key": "instanceId", "value": "my-instance" }
+                ]
+              },
+              "description": "Delete proxy"
+            }
+          },
+          {
+            "name": "Get instance QR code",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/instance/qr",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "qr"]
+              },
+              "description": "Get instance QR code"
+            }
+          },
+          {
+            "name": "Get instance status",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/instance/status",
+                "host": ["{{baseUrl}}"],
+                "path": ["instance", "status"]
+              },
+              "description": "Get instance status"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Label",
+        "item": [
+          {
+            "name": "Add label to chat",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"jid\": \"5511999999999@s.whatsapp.net\",\n  \"labelId\": \"1\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/label/chat",
+                "host": ["{{baseUrl}}"],
+                "path": ["label", "chat"]
+              },
+              "description": "Add label to chat"
+            }
+          },
+          {
+            "name": "Edit label",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"labelId\": \"1\",\n  \"name\": \"Important\",\n  \"color\": 1,\n  \"deleted\": false\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/label/edit",
+                "host": ["{{baseUrl}}"],
+                "path": ["label", "edit"]
+              },
+              "description": "Edit label"
+            }
+          },
+          {
+            "name": "Add label to message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"jid\": \"5511999999999@s.whatsapp.net\",\n  \"labelId\": \"1\",\n  \"messageId\": \"ABCDEF1234567890\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/label/message",
+                "host": ["{{baseUrl}}"],
+                "path": ["label", "message"]
+              },
+              "description": "Add label to message"
+            }
+          },
+          {
+            "name": "Remove label from chat",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"jid\": \"5511999999999@s.whatsapp.net\",\n  \"labelId\": \"1\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/unlabel/chat",
+                "host": ["{{baseUrl}}"],
+                "path": ["unlabel", "chat"]
+              },
+              "description": "Remove label from chat"
+            }
+          },
+          {
+            "name": "Remove label from message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"jid\": \"5511999999999@s.whatsapp.net\",\n  \"labelId\": \"1\",\n  \"messageId\": \"ABCDEF1234567890\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/unlabel/message",
+                "host": ["{{baseUrl}}"],
+                "path": ["unlabel", "message"]
+              },
+              "description": "Remove label from message"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Message",
+        "item": [
+          {
+            "name": "Delete a message for everyone",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"chat\": \"5511999999999@s.whatsapp.net\",\n  \"messageId\": \"ABCDEF1234567890\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/message/delete",
+                "host": ["{{baseUrl}}"],
+                "path": ["message", "delete"]
+              },
+              "description": "Delete a message for everyone"
+            }
+          },
+          {
+            "name": "Download an image",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"url\": \"https://mmg.whatsapp.net/...\",\n  \"directPath\": \"/v/...\",\n  \"mimetype\": \"image/jpeg\",\n  \"mediaKey\": [],\n  \"fileEncSHA256\": [],\n  \"fileSHA256\": [],\n  \"fileLength\": 0\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/message/downloadimage",
+                "host": ["{{baseUrl}}"],
+                "path": ["message", "downloadimage"]
+              },
+              "description": "Download an image"
+            }
+          },
+          {
+            "name": "Edit a message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"chat\": \"5511999999999@s.whatsapp.net\",\n  \"messageId\": \"ABCDEF1234567890\",\n  \"message\": \"Updated message text\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/message/edit",
+                "host": ["{{baseUrl}}"],
+                "path": ["message", "edit"]
+              },
+              "description": "Edit a message"
+            }
+          },
+          {
+            "name": "Mark a message as read",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999@s.whatsapp.net\",\n  \"id\": [\"ABCDEF1234567890\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/message/markread",
+                "host": ["{{baseUrl}}"],
+                "path": ["message", "markread"]
+              },
+              "description": "Mark a message as read"
+            }
+          },
+          {
+            "name": "Set chat presence",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999@s.whatsapp.net\",\n  \"state\": \"composing\",\n  \"isAudio\": false\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/message/presence",
+                "host": ["{{baseUrl}}"],
+                "path": ["message", "presence"]
+              },
+              "description": "Set chat presence"
+            }
+          },
+          {
+            "name": "React a message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999@s.whatsapp.net\",\n  \"id\": \"ABCDEF1234567890\",\n  \"reaction\": \"👍\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/message/react",
+                "host": ["{{baseUrl}}"],
+                "path": ["message", "react"]
+              },
+              "description": "React a message"
+            }
+          },
+          {
+            "name": "Get message status",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"id\": \"ABCDEF1234567890\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/message/status",
+                "host": ["{{baseUrl}}"],
+                "path": ["message", "status"]
+              },
+              "description": "Get message status"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Newsletter",
+        "item": [
+          {
+            "name": "Create newsletter",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"name\": \"My Newsletter\",\n  \"description\": \"Newsletter description\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/newsletter/create",
+                "host": ["{{baseUrl}}"],
+                "path": ["newsletter", "create"]
+              },
+              "description": "Create newsletter"
+            }
+          },
+          {
+            "name": "Get newsletter",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"jid\": {\n    \"user\": \"123456789\",\n    \"server\": \"newsletter\",\n    \"device\": 0,\n    \"integrator\": 0,\n    \"rawAgent\": 0\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/newsletter/info",
+                "host": ["{{baseUrl}}"],
+                "path": ["newsletter", "info"]
+              },
+              "description": "Get newsletter"
+            }
+          },
+          {
+            "name": "Get newsletter invite",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"key\": \"newsletter_invite_key\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/newsletter/link",
+                "host": ["{{baseUrl}}"],
+                "path": ["newsletter", "link"]
+              },
+              "description": "Get newsletter invite"
+            }
+          },
+          {
+            "name": "List newsletters",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/newsletter/list",
+                "host": ["{{baseUrl}}"],
+                "path": ["newsletter", "list"]
+              },
+              "description": "List newsletters"
+            }
+          },
+          {
+            "name": "Get newsletter messages",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"jid\": {\n    \"user\": \"123456789\",\n    \"server\": \"newsletter\",\n    \"device\": 0,\n    \"integrator\": 0,\n    \"rawAgent\": 0\n  },\n  \"count\": 10,\n  \"before_id\": 0\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/newsletter/messages",
+                "host": ["{{baseUrl}}"],
+                "path": ["newsletter", "messages"]
+              },
+              "description": "Get newsletter messages"
+            }
+          },
+          {
+            "name": "Subscribe newsletter",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"jid\": {\n    \"user\": \"123456789\",\n    \"server\": \"newsletter\",\n    \"device\": 0,\n    \"integrator\": 0,\n    \"rawAgent\": 0\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/newsletter/subscribe",
+                "host": ["{{baseUrl}}"],
+                "path": ["newsletter", "subscribe"]
+              },
+              "description": "Subscribe newsletter"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Send Message",
+        "item": [
+          {
+            "name": "Send a contact message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"id\": \"\",\n  \"delay\": 0,\n  \"mentionAll\": false,\n  \"mentionedJid\": \"\",\n  \"vcard\": {\n    \"fullName\": \"John Doe\",\n    \"organization\": \"Acme Corp\",\n    \"phone\": \"5511888888888\"\n  },\n  \"quoted\": {\n    \"messageId\": \"\",\n    \"participant\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/send/contact",
+                "host": ["{{baseUrl}}"],
+                "path": ["send", "contact"]
+              },
+              "description": "Send a contact message"
+            }
+          },
+          {
+            "name": "Send a link message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"id\": \"\",\n  \"delay\": 0,\n  \"mentionAll\": false,\n  \"mentionedJid\": \"\",\n  \"text\": \"Check this out!\",\n  \"url\": \"https://example.com\",\n  \"title\": \"Example Title\",\n  \"description\": \"Example description\",\n  \"imgUrl\": \"https://example.com/image.jpg\",\n  \"quoted\": {\n    \"messageId\": \"\",\n    \"participant\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/send/link",
+                "host": ["{{baseUrl}}"],
+                "path": ["send", "link"]
+              },
+              "description": "Send a link message"
+            }
+          },
+          {
+            "name": "Send a location message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"id\": \"\",\n  \"delay\": 0,\n  \"mentionAll\": false,\n  \"mentionedJid\": \"\",\n  \"name\": \"My Location\",\n  \"address\": \"123 Main St, City\",\n  \"latitude\": -23.550520,\n  \"longitude\": -46.633308,\n  \"quoted\": {\n    \"messageId\": \"\",\n    \"participant\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/send/location",
+                "host": ["{{baseUrl}}"],
+                "path": ["send", "location"]
+              },
+              "description": "Send a location message"
+            }
+          },
+          {
+            "name": "Send a media message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"id\": \"\",\n  \"delay\": 0,\n  \"mentionAll\": false,\n  \"mentionedJid\": \"\",\n  \"type\": \"image\",\n  \"url\": \"https://example.com/image.jpg\",\n  \"caption\": \"My caption\",\n  \"filename\": \"image.jpg\",\n  \"quoted\": {\n    \"messageId\": \"\",\n    \"participant\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/send/media",
+                "host": ["{{baseUrl}}"],
+                "path": ["send", "media"]
+              },
+              "description": "Send a media message (type: image | video | document | audio)"
+            }
+          },
+          {
+            "name": "Send a poll message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"id\": \"\",\n  \"delay\": 0,\n  \"mentionAll\": false,\n  \"mentionedJid\": \"\",\n  \"question\": \"What is your favorite color?\",\n  \"options\": [\"Red\", \"Blue\", \"Green\"],\n  \"maxAnswer\": 1,\n  \"quoted\": {\n    \"messageId\": \"\",\n    \"participant\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/send/poll",
+                "host": ["{{baseUrl}}"],
+                "path": ["send", "poll"]
+              },
+              "description": "Send a poll message"
+            }
+          },
+          {
+            "name": "Send a sticker message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"id\": \"\",\n  \"delay\": 0,\n  \"mentionAll\": false,\n  \"mentionedJid\": \"\",\n  \"sticker\": \"https://example.com/sticker.webp\",\n  \"quoted\": {\n    \"messageId\": \"\",\n    \"participant\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/send/sticker",
+                "host": ["{{baseUrl}}"],
+                "path": ["send", "sticker"]
+              },
+              "description": "Send a sticker message"
+            }
+          },
+          {
+            "name": "Send a text message",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"id\": \"\",\n  \"delay\": 0,\n  \"mentionAll\": false,\n  \"mentionedJid\": \"\",\n  \"text\": \"Hello, World!\",\n  \"quoted\": {\n    \"messageId\": \"\",\n    \"participant\": \"\"\n  }\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/send/text",
+                "host": ["{{baseUrl}}"],
+                "path": ["send", "text"]
+              },
+              "description": "Send a text message"
+            }
+          }
+        ]
+      },
+      {
+        "name": "User",
+        "item": [
+          {
+            "name": "Get a user's avatar",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\",\n  \"preview\": false\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/user/avatar",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "avatar"]
+              },
+              "description": "Get a user's avatar"
+            }
+          },
+          {
+            "name": "Block a contact",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/user/block",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "block"]
+              },
+              "description": "Block a contact"
+            }
+          },
+          {
+            "name": "Get a user's block list",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/user/blocklist",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "blocklist"]
+              },
+              "description": "Get a user's block list"
+            }
+          },
+          {
+            "name": "Check a user",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": [\"5511999999999\", \"5511888888888\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/user/check",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "check"]
+              },
+              "description": "Check a user"
+            }
+          },
+          {
+            "name": "Get a user's contacts",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/user/contacts",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "contacts"]
+              },
+              "description": "Get a user's contacts"
+            }
+          },
+          {
+            "name": "Get a user",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": [\"5511999999999\"]\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/user/info",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "info"]
+              },
+              "description": "Get a user"
+            }
+          },
+          {
+            "name": "Get a user's privacy settings",
+            "request": {
+              "method": "GET",
+              "header": [
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "url": {
+                "raw": "{{baseUrl}}/user/privacy",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "privacy"]
+              },
+              "description": "Get a user's privacy settings"
+            }
+          },
+          {
+            "name": "Set a user's profile picture",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"image\": \"base64_or_url_here\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/user/profile",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "profile"]
+              },
+              "description": "Set a user's profile picture"
+            }
+          },
+          {
+            "name": "Unblock a contact",
+            "request": {
+              "method": "POST",
+              "header": [
+                { "key": "Content-Type", "value": "application/json" },
+                { "key": "apikey", "value": "{{apikey}}" }
+              ],
+              "body": {
+                "mode": "raw",
+                "raw": "{\n  \"number\": \"5511999999999\"\n}",
+                "options": { "raw": { "language": "json" } }
+              },
+              "url": {
+                "raw": "{{baseUrl}}/user/unblock",
+                "host": ["{{baseUrl}}"],
+                "path": ["user", "unblock"]
+              },
+              "description": "Unblock a contact"
+            }
+          }
+        ]
+      }
+    ]
+  }
