@@ -1,0 +1,128 @@
+{
+	"info": {
+		"_postman_id": "5b66a30f-5325-4a4a-b361-b8edf7579be2",
+		"name": "Evolution API | v3",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41342671"
+	},
+	"item": [
+		{
+			"name": "Send Message",
+			"item": [
+				{
+					"name": "Send Button",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "apikey",
+								"value": "{{apiKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"number\": \"{{remoteJid}}\",\n    \"title\": \"Escolha uma opção\",\n    \"description\": \"Selecione o que deseja fazer\",\n    \"footer\": \"Powered by Evolution GO\",\n    \"buttons\": [\n        // {\n        //   \"type\": \"reply\",\n        //   \"displayText\": \"Ver Produtos\",\n        //   \"id\": \"btn_produtos\"\n        // }\n        // {\n        //     \"type\": \"pix\",\n        //     \"name\": \"Loja Exemplo\",\n        //     \"key\": \"exemplo@pix.com\",\n        //     \"keyType\": \"email\",\n        //     \"currency\": \"BRL\"\n        // }\n        // {\n        //     \"type\": \"url\",\n        //     \"displayText\": \"Site Oficial\",\n        //     \"url\": \"https://exemplo.com\"\n        // }\n        // {\n        //   \"type\": \"call\",\n        //   \"displayText\": \"Ligar\",\n        //   \"phoneNumber\": \"5511999999999\"\n        // }\n    ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/send/button",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"send",
+								"button"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://localhost:4000/send/contact \\\n  -H \"Content-Type: application/json\" \\\n  -H \"apikey: SUA-CHAVE-API\" \\\n  -d '{\n    \"number\": \"5511999999999\",\n    \"vcard\": {\n      \"fullName\": \"Maria Santos\",\n      \"phone\": \"5511777777777\",\n      \"organization\": \"Vendas LTDA\"\n    }\n  }'"
+					},
+					"response": []
+				},
+				{
+					"name": "Send List",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							},
+							{
+								"key": "apikey",
+								"value": "{{apiKey}}"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"number\": \"{{remoteJid}}\",\n  \"title\": \"Nossos Serviços\",\n  \"description\": \"Selecione um serviço\",\n  \"buttonText\": \"Ver Opções\",\n  \"footerText\": \"Atendimento 24h\",\n  \"sections\": [\n    {\n      \"title\": \"Planos\",\n      \"rows\": [\n        {\n          \"title\": \"Plano Básico\",\n          \"description\": \"R$ 29,90/mês\",\n          \"rowId\": \"plano_basico\"\n        },\n        {\n          \"title\": \"Plano Premium\",\n          \"description\": \"R$ 59,90/mês\",\n          \"rowId\": \"plano_premium\"\n        }\n      ]\n    },\n    {\n      \"title\": \"Suporte\",\n      \"rows\": [\n        {\n          \"title\": \"Falar com Atendente\",\n          \"description\": \"Chat ao vivo\",\n          \"rowId\": \"atendente\"\n        }\n      ]\n    }\n  ]\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{baseUrl}}/send/list",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"send",
+								"list"
+							]
+						},
+						"description": "Generated from cURL: curl -X POST http://localhost:4000/send/contact \\\n  -H \"Content-Type: application/json\" \\\n  -H \"apikey: SUA-CHAVE-API\" \\\n  -d '{\n    \"number\": \"5511999999999\",\n    \"vcard\": {\n      \"fullName\": \"Maria Santos\",\n      \"phone\": \"5511777777777\",\n      \"organization\": \"Vendas LTDA\"\n    }\n  }'"
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080/",
+			"type": "string"
+		},
+		{
+			"key": "apiKey",
+			"value": "0369e5cc-60ce-4050-8d0e-60ecb83c37e5",
+			"type": "string"
+		},
+		{
+			"key": "remoteJid",
+			"value": "5531985702237",
+			"type": "default"
+		}
+	]
+}
