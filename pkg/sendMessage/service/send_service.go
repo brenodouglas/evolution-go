@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"image"
+	"image/jpeg"
 	"image/png"
 	"io"
 	"mime/multipart"
@@ -45,6 +46,9 @@ type SendService interface {
 	SendButton(data *ButtonStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendList(data *ListStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
 	SendCarousel(data *CarouselStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
+	SendStatusText(data *StatusTextStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
+	SendStatusMediaUrl(data *StatusMediaStruct, instance *instance_model.Instance) (*MessageSendStruct, error)
+	SendStatusMediaFile(data *StatusMediaStruct, fileData []byte, instance *instance_model.Instance) (*MessageSendStruct, error)
 }
 
 type Node struct {
@@ -65,7 +69,7 @@ type SendDataStruct struct {
 	Number       string
 	Delay        int32
 	MentionAll   bool
-	MentionedJID string
+	MentionedJID []string
 	FormatJid    *bool
 	Quoted       QuotedStruct
 }
@@ -80,7 +84,7 @@ type TextStruct struct {
 	Text         string       `json:"text"`
 	Id           string       `json:"id"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -95,7 +99,7 @@ type LinkStruct struct {
 	ImgUrl       string       `json:"imgUrl"`
 	Id           string       `json:"id"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -109,7 +113,7 @@ type MediaStruct struct {
 	Filename     string       `json:"filename"`
 	Id           string       `json:"id"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -122,7 +126,7 @@ type PollStruct struct {
 	MaxAnswer    int          `json:"maxAnswer"`
 	Options      []string     `json:"options"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -133,7 +137,7 @@ type StickerStruct struct {
 	Sticker      string       `json:"sticker"`
 	Id           string       `json:"id"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -147,7 +151,7 @@ type LocationStruct struct {
 	Longitude    float64      `json:"longitude"`
 	Address      string       `json:"address"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -158,7 +162,7 @@ type ContactStruct struct {
 	Id           string            `json:"id"`
 	Vcard        utils.VCardStruct `json:"vcard"`
 	Delay        int32             `json:"delay"`
-	MentionedJID string            `json:"mentionedJid"`
+	MentionedJID []string          `json:"mentionedJid"`
 	MentionAll   bool              `json:"mentionAll"`
 	FormatJid    *bool             `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct      `json:"quoted"`
@@ -185,7 +189,7 @@ type ButtonStruct struct {
 	Footer       string       `json:"footer"`
 	Buttons      []Button     `json:"buttons"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -210,7 +214,7 @@ type ListStruct struct {
 	FooterText   string       `json:"footerText"`
 	Sections     []Section    `json:"sections"`
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -218,7 +222,7 @@ type ListStruct struct {
 
 type CarouselStruct struct {
 	Delay        int32        `json:"delay"`
-	MentionedJID string       `json:"mentionedJid"`
+	MentionedJID []string     `json:"mentionedJid"`
 	MentionAll   bool         `json:"mentionAll"`
 	FormatJid    *bool        `json:"formatJid,omitempty"`
 	Quoted       QuotedStruct `json:"quoted"`
@@ -232,6 +236,18 @@ type CarouselStruct struct {
 		FooterText   string   `json:"footerText"`
 		Buttons      []Button `json:"buttons"`
 	} `json:"cards"`
+}
+
+type StatusTextStruct struct {
+	Text string `json:"text"`
+	Id   string `json:"id"`
+}
+
+type StatusMediaStruct struct {
+	Type    string `json:"type"`
+	Url     string `json:"url"`
+	Caption string `json:"caption"`
+	Id      string `json:"id"`
 }
 
 type MessageSendStruct struct {
@@ -2303,28 +2319,28 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 
 		}
 
-		if data.MentionedJID != "" {
+		if len(data.MentionedJID) > 0 {
 			switch messageType {
 			case "ExtendedTextMessage":
-				msg.ExtendedTextMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.ExtendedTextMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "ImageMessage":
-				msg.ImageMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.ImageMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "VideoMessage":
-				msg.VideoMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.VideoMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "PtvMessage":
-				msg.PtvMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.PtvMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "AudioMessage":
-				msg.AudioMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.AudioMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "DocumentMessage":
-				msg.DocumentMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.DocumentMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "PollCreationMessage":
-				msg.PollCreationMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.PollCreationMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "StickerMessage":
-				msg.StickerMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.StickerMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "LocationMessage":
-				msg.LocationMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.LocationMessage.ContextInfo.MentionedJID = data.MentionedJID
 			case "ContactMessage":
-				msg.ContactMessage.ContextInfo.MentionedJID = []string{data.MentionedJID}
+				msg.ContactMessage.ContextInfo.MentionedJID = data.MentionedJID
 			}
 		}
 	}
@@ -2452,6 +2468,295 @@ func (s *sendService) SendMessage(instance *instance_model.Instance, msg *waE2E.
 
 	s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Message sent to %s", instance.Id, data.Number)
 	return messageSent, nil
+}
+
+// makeJPEGThumbnail decodes raw image bytes and produces a small JPEG
+// thumbnail suitable for the JPEGThumbnail field of WhatsApp media messages.
+// The thumbnail keeps the original aspect ratio and is capped at maxWidth
+// pixels wide. It returns nil if the image cannot be decoded so callers can
+// fall back to sending the message without a preview thumbnail.
+func makeJPEGThumbnail(fileData []byte, maxWidth int) []byte {
+	if maxWidth < 1 {
+		maxWidth = 72
+	}
+
+	img, _, err := image.Decode(bytes.NewReader(fileData))
+	if err != nil {
+		return nil
+	}
+
+	bounds := img.Bounds()
+	srcWidth := bounds.Dx()
+	srcHeight := bounds.Dy()
+	if srcWidth < 1 || srcHeight < 1 {
+		return nil
+	}
+
+	thumbWidth := maxWidth
+	if srcWidth < thumbWidth {
+		thumbWidth = srcWidth
+	}
+	thumbHeight := int(float64(srcHeight) * float64(thumbWidth) / float64(srcWidth))
+	if thumbHeight < 1 {
+		thumbHeight = 1
+	}
+
+	thumbImg := image.NewRGBA(image.Rect(0, 0, thumbWidth, thumbHeight))
+	for y := 0; y < thumbHeight; y++ {
+		for x := 0; x < thumbWidth; x++ {
+			srcX := x * srcWidth / thumbWidth
+			srcY := y * srcHeight / thumbHeight
+			thumbImg.Set(x, y, img.At(srcX+bounds.Min.X, srcY+bounds.Min.Y))
+		}
+	}
+
+	var thumbBuf bytes.Buffer
+	if err := jpeg.Encode(&thumbBuf, thumbImg, &jpeg.Options{Quality: 50}); err != nil {
+		return nil
+	}
+	return thumbBuf.Bytes()
+}
+
+func (s *sendService) SendStatusText(data *StatusTextStruct, instance *instance_model.Instance) (*MessageSendStruct, error) {
+	client, err := s.ensureClientConnected(instance.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if data.Text == "" {
+		return nil, errors.New("text is required")
+	}
+
+	msg := &waE2E.Message{
+		ExtendedTextMessage: &waE2E.ExtendedTextMessage{
+			Text: &data.Text,
+		},
+	}
+
+	messageID := data.Id
+	if messageID == "" {
+		messageID = client.GenerateMessageID()
+	}
+
+	recipient := types.NewJID("status", "broadcast")
+
+	response, err := client.SendMessage(context.Background(), recipient, msg, whatsmeow.SendRequestExtra{ID: messageID})
+	if err != nil {
+		return nil, err
+	}
+
+	messageInfo := types.MessageInfo{
+		MessageSource: types.MessageSource{
+			Chat:     recipient,
+			Sender:   *client.Store.ID,
+			IsFromMe: true,
+			IsGroup:  false,
+		},
+		ID:        messageID,
+		Timestamp: time.Now(),
+		ServerID:  response.ServerID,
+		Type:      "StatusTextMessage",
+	}
+
+	messageSent := &MessageSendStruct{
+		Info:    messageInfo,
+		Message: msg,
+		MessageContextInfo: &waE2E.ContextInfo{
+			StanzaID:      proto.String(""),
+			Participant:   proto.String(""),
+			QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
+		},
+	}
+
+	s.sendStatusWebhook(messageSent, instance, "text")
+	s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Status text sent successfully", instance.Id)
+	return messageSent, nil
+}
+
+func (s *sendService) SendStatusMediaUrl(data *StatusMediaStruct, instance *instance_model.Instance) (*MessageSendStruct, error) {
+	client, err := s.ensureClientConnected(instance.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if data.Url == "" {
+		return nil, errors.New("url is required")
+	}
+	if data.Type != "image" && data.Type != "video" {
+		return nil, errors.New("type must be 'image' or 'video'")
+	}
+
+	req, err := http.NewRequest("GET", data.Url, nil)
+	if err != nil {
+		return nil, err
+	}
+	req.Header.Set("User-Agent", "Evolution-GO/1.0")
+
+	httpClient := &http.Client{}
+	resp, err := httpClient.Do(req)
+	if err != nil {
+		return nil, fmt.Errorf("failed to download file from URL: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode < 200 || resp.StatusCode > 299 {
+		return nil, fmt.Errorf("failed to download file: HTTP status %d", resp.StatusCode)
+	}
+
+	fileData, err := io.ReadAll(resp.Body)
+	if err != nil {
+		return nil, err
+	}
+
+	return s.sendStatusMedia(client, data, fileData, instance)
+}
+
+func (s *sendService) SendStatusMediaFile(data *StatusMediaStruct, fileData []byte, instance *instance_model.Instance) (*MessageSendStruct, error) {
+	client, err := s.ensureClientConnected(instance.Id)
+	if err != nil {
+		return nil, err
+	}
+
+	if data.Type != "image" && data.Type != "video" {
+		return nil, errors.New("type must be 'image' or 'video'")
+	}
+
+	return s.sendStatusMedia(client, data, fileData, instance)
+}
+
+func (s *sendService) sendStatusMedia(client *whatsmeow.Client, data *StatusMediaStruct, fileData []byte, instance *instance_model.Instance) (*MessageSendStruct, error) {
+	mime, _ := mimetype.DetectReader(bytes.NewReader(fileData))
+	mimeType := mime.String()
+
+	var uploadType whatsmeow.MediaType
+	switch data.Type {
+	case "image":
+		if mimeType != "image/jpeg" && mimeType != "image/png" && mimeType != "image/webp" {
+			return nil, fmt.Errorf("invalid file format: '%s'. Only 'image/jpeg', 'image/png' and 'image/webp' are accepted", mimeType)
+		}
+		if mimeType == "image/webp" {
+			mimeType = "image/jpeg"
+		}
+		uploadType = whatsmeow.MediaImage
+	case "video":
+		if mimeType != "video/mp4" {
+			return nil, fmt.Errorf("invalid file format: '%s'. Only 'video/mp4' is accepted", mimeType)
+		}
+		uploadType = whatsmeow.MediaVideo
+	default:
+		return nil, errors.New("invalid media type")
+	}
+
+	uploaded, err := client.Upload(context.Background(), fileData, uploadType)
+	if err != nil {
+		return nil, err
+	}
+
+	s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Status media uploaded, size: %d", instance.Id, uploaded.FileLength)
+
+	var media *waE2E.Message
+	var mediaType string
+
+	switch data.Type {
+	case "image":
+		jpegThumb := makeJPEGThumbnail(fileData, 72)
+		media = &waE2E.Message{ImageMessage: &waE2E.ImageMessage{
+			Caption:        proto.String(data.Caption),
+			URL:            proto.String(uploaded.URL),
+			DirectPath:     proto.String(uploaded.DirectPath),
+			MediaKey:       uploaded.MediaKey,
+			Mimetype:       proto.String(mimeType),
+			FileEncSHA256:  uploaded.FileEncSHA256,
+			FileSHA256:     uploaded.FileSHA256,
+			FileLength:     proto.Uint64(uint64(len(fileData))),
+			JPEGThumbnail:  jpegThumb,
+		}}
+		mediaType = "ImageMessage"
+	case "video":
+		media = &waE2E.Message{VideoMessage: &waE2E.VideoMessage{
+			Caption:       proto.String(data.Caption),
+			URL:           proto.String(uploaded.URL),
+			DirectPath:    proto.String(uploaded.DirectPath),
+			MediaKey:      uploaded.MediaKey,
+			Mimetype:      proto.String(mimeType),
+			FileEncSHA256: uploaded.FileEncSHA256,
+			FileSHA256:    uploaded.FileSHA256,
+			FileLength:    proto.Uint64(uint64(len(fileData))),
+		}}
+		mediaType = "VideoMessage"
+	}
+
+	messageID := data.Id
+	if messageID == "" {
+		messageID = client.GenerateMessageID()
+	}
+
+	recipient := types.NewJID("status", "broadcast")
+
+	response, err := client.SendMessage(context.Background(), recipient, media, whatsmeow.SendRequestExtra{ID: messageID})
+	if err != nil {
+		return nil, err
+	}
+
+	messageInfo := types.MessageInfo{
+		MessageSource: types.MessageSource{
+			Chat:     recipient,
+			Sender:   *client.Store.ID,
+			IsFromMe: true,
+			IsGroup:  false,
+		},
+		ID:        messageID,
+		Timestamp: time.Now(),
+		ServerID:  response.ServerID,
+		Type:      mediaType,
+	}
+
+	messageSent := &MessageSendStruct{
+		Info:    messageInfo,
+		Message: media,
+		MessageContextInfo: &waE2E.ContextInfo{
+			StanzaID:      proto.String(""),
+			Participant:   proto.String(""),
+			QuotedMessage: &waE2E.Message{Conversation: proto.String("")},
+		},
+	}
+
+	s.sendStatusWebhook(messageSent, instance, "media")
+	return messageSent, nil
+}
+
+func (s *sendService) sendStatusWebhook(messageSent *MessageSendStruct, instance *instance_model.Instance, messageType string) {
+	postMap := make(map[string]interface{})
+	postMap["event"] = "SendStatus"
+	messageData := make(map[string]interface{})
+	messageData["Info"] = messageSent.Info
+	msgBytes, err := json.Marshal(messageSent.Message)
+	if err != nil {
+		s.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to marshal status message: %v", instance.Id, err)
+		return
+	}
+	var msgMap map[string]interface{}
+	if err := json.Unmarshal(msgBytes, &msgMap); err != nil {
+		s.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to unmarshal status message: %v", instance.Id, err)
+		return
+	}
+	messageData["Message"] = msgMap
+	messageData["MessageContextInfo"] = messageSent.MessageContextInfo
+	postMap["data"] = messageData
+	postMap["instanceToken"] = instance.Token
+	postMap["instanceId"] = instance.Id
+	postMap["instanceName"] = instance.Name
+
+	values, err := json.Marshal(postMap)
+	if err != nil {
+		s.loggerWrapper.GetLogger(instance.Id).LogError("[%s] Failed to marshal webhook payload: %v", instance.Id, err)
+		return
+	}
+	go s.whatsmeowService.CallWebhook(instance, "sendstatus", values)
+	if s.config.AmqpGlobalEnabled || s.config.NatsGlobalEnabled {
+		go s.whatsmeowService.SendToGlobalQueues("SendStatus", values, instance.Id)
+	}
+	s.loggerWrapper.GetLogger(instance.Id).LogInfo("[%s] Status %s sent successfully", instance.Id, messageType)
 }
 
 func NewSendService(
